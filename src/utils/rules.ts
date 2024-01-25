@@ -14,8 +14,6 @@ export const schemaLogin = yup.object({
     .max(160, 'Độ dài từ 6 - 160 ký tự')
 })
 
-const loginSchema = schemaLogin
-
 export type SchemaLogin = yup.InferType<typeof schemaLogin>
 
 export const schemaRegister = yup.object({
