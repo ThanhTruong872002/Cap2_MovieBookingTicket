@@ -21,8 +21,8 @@ module.exports = {
           maxWidth: theme("columns.8xl"),
           marginLeft: "auto",
           marginRight: "auto",
-          paddingLeft: theme("spacing.32"),
-          paddingRight: theme("spacing.32"),
+          paddingLeft: theme("spacing.60"),
+          paddingRight: theme("spacing.60"),
         },
       });
     }),

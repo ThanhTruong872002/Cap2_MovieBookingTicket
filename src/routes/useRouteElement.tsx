@@ -4,7 +4,7 @@ import Account from "../pages/Account";
 export default function useRouteElement() {
   const routeElements = useRoutes([
     {
-      path: "/account",
+      path: "/",
       element: <Account />,
     },
   ]);
