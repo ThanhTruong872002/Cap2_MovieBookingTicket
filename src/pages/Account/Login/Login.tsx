@@ -8,14 +8,13 @@ interface FormLogin {
   password: string
 }
 
-const loginSchema = schemaLogin
 
 export default function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setError
+    // setError
   } = useForm<FormLogin>({
     resolver: yupResolver(schemaLogin)
   })

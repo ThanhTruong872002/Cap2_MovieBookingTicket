@@ -31,7 +31,7 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors },
-    setError
+    // setError
   } = useForm<FormRegister>({
     resolver: yupResolver(registerSchema)
   })
