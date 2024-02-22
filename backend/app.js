@@ -31,14 +31,12 @@ app.use(errorHandlerMidd)
 
 const port = process.env.PORT || 5555
 const start = async () => {
-    try {
-        await connectDB(process.env.DB_URL)
-        app.listen(port, () =>
-            console.log(`Server listenning on port ${port}...`)
-        )
-    } catch (err) {
-        console.log(`Server run with error: ${err}`)
-    }
+  try {
+    await connectDB(process.env.DB_URL)
+    app.listen(port, () => console.log(`Server listenning on port ${port}...`))
+  } catch (err) {
+    console.log(`Server run with error: ${err}`)
+  }
 }
 
 start()

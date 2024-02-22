@@ -15,10 +15,10 @@ const forgotPassword = async (req, res) => {}
 const resetPassword = async (req, res) => {}
 
 module.exports = {
-    registerLocal,
-    verifyEmail,
-    loginLocal,
-    logout,
-    forgotPassword,
-    resetPassword,
+  registerLocal,
+  verifyEmail,
+  loginLocal,
+  logout,
+  forgotPassword,
+  resetPassword
 }
