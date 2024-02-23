@@ -1,24 +1,90 @@
 const { StatusCodes } = require('http-status-codes')
-const { User } = require('../models')
+const { Customer, Token } = require('../models')
 const CustomError = require('../errors')
+const { createTokenUser, createJWT } = require('../utils')
+const crypto = require('crypto')
+const { attachTokenToHeaders } = require('../utils/jwt')
 
-const registerLocal = async (req, res) => {}
+const registerLocal = async (req, res) => {
+  const { fullName, email, password, repeatPassword } = req.body
+  if (!fullName || !email || !password) {
+    throw new CustomError.BadRequestError('Vui lòng cung cấp đầy đủ thông tin')
+  }
+  if (password !== repeatPassword) {
+    throw new CustomError.BadRequestError('Mật khẩu xác nhận không khớp')
+  }
+  const isEmailExist = await Customer.findOne({
+    email,
+  })
+  if (isEmailExist) {
+    throw new CustomError.BadRequestError('Email đã tồn tại trên hệ thống')
+  }
+  await Customer.create({
+    fullName,
+    email,
+    password,
+  })
+  res.status(StatusCodes.CREATED).json({
+    msg: 'Đăng ký tài khoản thành công',
+  })
+}
 
-const verifyEmail = async (req, res) => {}
+const loginLocal = async (req, res) => {
+  const { email, password } = req.body
+  if (!email || !password) {
+    throw new CustomError.BadRequestError('Vui lòng cung cấp đầy đủ thông tin')
+  }
+  const customer = await Customer.findOne({
+    email,
+  })
+  if (!customer) {
+    throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ')
+  }
+  const isPasswordTrue = await customer.comparePassword(password)
+  if (!isPasswordTrue) {
+    throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ')
+  }
+  const tokenUser = createTokenUser(customer)
+  let refreshToken = ''
+  const existingToken = await Token.findOne({ customer: customer._id, deleted: false })
+  if (existingToken) {
+    const { isValid } = existingToken
+    if (!isValid) {
+      throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ')
+    }
+    refreshToken = existingToken.refreshToken
+  } else {
+    refreshToken = crypto.randomBytes(40).toString('hex')
+    const userAgent = req.headers['user-agent']
+    const ip = req.ip
+    await Token.create({ refreshToken, ip, userAgent, customer: customer._id })
+  }
+  attachTokenToHeaders({
+    res,
+    customer: tokenUser,
+    refreshToken,
+  })
+  res.status(StatusCodes.OK).json({
+    user: tokenUser,
+  })
+}
 
-const loginLocal = async (req, res) => {}
+const logout = async (req, res) => {
+  await Token.findOneAndUpdate(
+    {
+      customer: req.customer.id,
+      deleted: false,
+    },
+    {
+      deleted: true,
+    },
+  )
 
-const logout = async (req, res) => {}
-
-const forgotPassword = async (req, res) => {}
-
-const resetPassword = async (req, res) => {}
+  res.status(StatusCodes.OK).json({ msg: 'Đăng xuất tài khoản thành công' })
+}
 
 module.exports = {
-    registerLocal,
-    verifyEmail,
-    loginLocal,
-    logout,
-    forgotPassword,
-    resetPassword,
+  registerLocal,
+  loginLocal,
+  logout,
 }
