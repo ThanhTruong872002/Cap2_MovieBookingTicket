@@ -57,15 +57,14 @@ const loginLocal = async (req, res) => {
     const ip = req.ip
     await Token.create({ refreshToken, ip, userAgent, customer: customer._id })
   }
-  attachTokenToHeaders({
-    res,
-    customer: tokenUser,
-    refreshToken,
-  })
+  const accessTokenJWT = createJWT({ payload: { customer } })
+  const refreshTokenJWT = createJWT({ payload: { customer, refreshToken } })
   res.status(StatusCodes.OK).json({
     message: 'Đăng nhập thành công',
     data: {
       user: tokenUser,
+      accessToken: accessTokenJWT,
+      refreshToken: refreshTokenJWT,
     },
   })
 }

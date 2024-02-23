@@ -11,16 +11,7 @@ const isTokenValid = (token) => {
   return jwt.verify(token, process.env.JWT_SECRET)
 }
 
-const attachTokenToHeaders = ({ res, customer, refreshToken }) => {
-  const accessTokenJWT = createJWT({ payload: { customer } })
-  const refreshTokenJWT = createJWT({ payload: { customer, refreshToken } })
-
-  res.setHeader('Authorization', `Bearer ${accessTokenJWT}`)
-  res.setHeader('Refresh-Token', `${refreshTokenJWT}`)
-}
-
 module.exports = {
   createJWT,
   isTokenValid,
-  attachTokenToHeaders,
 }
