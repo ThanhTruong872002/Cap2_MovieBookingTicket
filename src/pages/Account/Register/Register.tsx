@@ -89,7 +89,7 @@ export default function Register() {
             <div>
               <div>Giới Tính*</div>
               <div className='flex flex-row gap-6 mt-4 w-[348px]'>
-                <GenderRadio value='male' label='Nam' checked />
+                <GenderRadio value='male' label='Nam' checked/>
                 <GenderRadio value='female' label='Nữ' />
                 <GenderRadio value='other' label='Khác' />
               </div>

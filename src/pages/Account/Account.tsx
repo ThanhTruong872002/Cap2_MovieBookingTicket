@@ -4,7 +4,7 @@ import Register from './Register'
 
 export default function Account() {
   return (
-    <div className='bg-[#0C1423] h-[100vh]'>
+    <div className='bg-[#0C1423] h-auto'>
       <AccountHeader />
       <div className='container'>
         <div className='flex'>
