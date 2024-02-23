@@ -1,20 +1,11 @@
 const express = require('express')
 const router = express.Router()
+const { authenticationMidd } = require('../middlewares')
 
-const {
-    registerLocal,
-    loginLocal,
-    verifyEmail,
-    logout,
-    forgotPassword,
-    resetPassword,
-} = require('../controllers/authController')
+const { registerLocal, loginLocal, logout } = require('../controllers/authController')
 
-router.route('/register-local').post(registerLocal)
-router.route('/verify-email').post(verifyEmail)
-router.route('/login-local').post(loginLocal)
-router.route('/logout').post(logout)
-router.route('/forgot-password').post(forgotPassword)
-router.route('/reset-password').post(resetPassword)
+router.route('/register').post(registerLocal)
+router.route('/login').post(loginLocal)
+router.route('/logout').delete(authenticationMidd, logout)
 
 module.exports = router
