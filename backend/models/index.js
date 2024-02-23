@@ -1,5 +1,7 @@
-const User = require('./User')
+const Customer = require('./Customer')
+const Token = require('./Token')
 
 module.exports = {
-    User,
+  Customer,
+  Token,
 }
