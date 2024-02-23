@@ -6,12 +6,9 @@ const crypto = require('crypto')
 const { attachTokenToHeaders } = require('../utils/jwt')
 
 const registerLocal = async (req, res) => {
-  const { fullName, email, password, repeatPassword } = req.body
+  const { fullName, email, password } = req.body
   if (!fullName || !email || !password) {
     throw new CustomError.BadRequestError('Vui lòng cung cấp đầy đủ thông tin')
-  }
-  if (password !== repeatPassword) {
-    throw new CustomError.BadRequestError('Mật khẩu xác nhận không khớp')
   }
   const isEmailExist = await Customer.findOne({
     email,

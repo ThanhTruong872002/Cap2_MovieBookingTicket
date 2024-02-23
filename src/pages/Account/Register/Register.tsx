@@ -21,7 +21,7 @@ interface FormRegister {
 interface GenderRadioProps {
   value: string
   label: string
-  checked?: boolean // Optional, defaults to false
+  checked?: boolean 
 }
 
 const registerSchema = schemaRegister
@@ -165,7 +165,7 @@ export default function Register() {
         </div>
 
         <div className='mt-6'>
-          <div className='mb-6'>Tỉnh/Thành Phố</div>
+          <div className='mb-6'>Tỉnh/Thành Phố*</div>
           <Select
             defaultValue='Đà Nẵng'
             style={{ width: 420, height: 40 }}
