@@ -6,12 +6,9 @@ const crypto = require('crypto')
 const { attachTokenToHeaders } = require('../utils/jwt')
 
 const registerLocal = async (req, res) => {
-  const { fullName, email, password, repeatPassword } = req.body
+  const { fullName, email, password } = req.body
   if (!fullName || !email || !password) {
     throw new CustomError.BadRequestError('Vui lòng cung cấp đầy đủ thông tin')
-  }
-  if (password !== repeatPassword) {
-    throw new CustomError.BadRequestError('Mật khẩu xác nhận không khớp')
   }
   const isEmailExist = await Customer.findOne({
     email,
@@ -25,7 +22,8 @@ const registerLocal = async (req, res) => {
     password,
   })
   res.status(StatusCodes.CREATED).json({
-    msg: 'Đăng ký tài khoản thành công',
+    message: 'Đăng ký tài khoản thành công',
+    data: {},
   })
 }
 
@@ -65,7 +63,10 @@ const loginLocal = async (req, res) => {
     refreshToken,
   })
   res.status(StatusCodes.OK).json({
-    user: tokenUser,
+    message: 'Đăng nhập thành công',
+    data: {
+      user: tokenUser,
+    },
   })
 }
 
@@ -80,7 +81,10 @@ const logout = async (req, res) => {
     },
   )
 
-  res.status(StatusCodes.OK).json({ msg: 'Đăng xuất tài khoản thành công' })
+  res.status(StatusCodes.OK).json({
+    message: 'Đăng xuất tài khoản thành công',
+    data: {},
+  })
 }
 
 module.exports = {
