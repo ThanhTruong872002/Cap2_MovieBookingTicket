@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const softDelete = require('mongoose-delete')
 const bcrypt = require('bcryptjs')
+const CustomError = require('../errors')
 
 const CustomerSchema = new mongoose.Schema(
   {
@@ -16,8 +17,15 @@ const CustomerSchema = new mongoose.Schema(
       required: [true, 'Vui lòng cung cấp email'],
       unique: true,
       validate: {
-        validator: validator.isEmail,
-        message: 'Vui lòng cung cấp email hợp lệ',
+        validator: async function (value) {
+          if (!validator.isEmail(value)) {
+            throw new CustomError.BadRequestError('Vui lòng cung cấp email hợp lệ')
+          }
+          const existingUser = await this.constructor.findOne({ email: value })
+          if (existingUser) {
+            throw new CustomError.BadRequestError('Email đã tồn tại trên hệ thống')
+          }
+        },
       },
     },
     password: {

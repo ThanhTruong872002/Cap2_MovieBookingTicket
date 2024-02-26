@@ -10,36 +10,38 @@ const registerLocal = async (req, res) => {
   if (!fullName || !email || !password) {
     throw new CustomError.BadRequestError('Vui lòng cung cấp đầy đủ thông tin')
   }
-  const isEmailExist = await Customer.findOne({
-    email,
-  })
-  if (isEmailExist) {
-    throw new CustomError.BadRequestError('Email đã tồn tại trên hệ thống')
-  }
   await Customer.create({
     fullName,
     email,
     password,
   })
   res.status(StatusCodes.CREATED).json({
-    msg: 'Đăng ký tài khoản thành công',
+    message: 'Đăng ký tài khoản thành công',
+    data: {},
   })
 }
 
 const loginLocal = async (req, res) => {
   const { email, password } = req.body
   if (!email || !password) {
-    throw new CustomError.BadRequestError('Vui lòng cung cấp đầy đủ thông tin')
+    throw new CustomError.BadRequestError('Vui lòng cung cấp đầy đủ thông tin', {
+      email: 'Email không được để trống',
+      pasword: 'Mật khẩu không được để trống',
+    })
   }
   const customer = await Customer.findOne({
     email,
   })
   if (!customer) {
-    throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ')
+    throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ', {
+      email: 'Email chưa được đăng ký',
+    })
   }
   const isPasswordTrue = await customer.comparePassword(password)
   if (!isPasswordTrue) {
-    throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ')
+    throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ', {
+      password: 'Mật khẩu không chính xác',
+    })
   }
   const tokenUser = createTokenUser(customer)
   let refreshToken = ''
@@ -47,7 +49,9 @@ const loginLocal = async (req, res) => {
   if (existingToken) {
     const { isValid } = existingToken
     if (!isValid) {
-      throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ')
+      throw new CustomError.UnauthenticatedError('Thông tin đăng nhập không hợp lệ', {
+        email: 'Tài khoản của bạn đã bị cấm',
+      })
     }
     refreshToken = existingToken.refreshToken
   } else {
@@ -56,13 +60,15 @@ const loginLocal = async (req, res) => {
     const ip = req.ip
     await Token.create({ refreshToken, ip, userAgent, customer: customer._id })
   }
-  attachTokenToHeaders({
-    res,
-    customer: tokenUser,
-    refreshToken,
-  })
+  const accessTokenJWT = createJWT({ payload: { customer } })
+  const refreshTokenJWT = createJWT({ payload: { customer, refreshToken } })
   res.status(StatusCodes.OK).json({
-    user: tokenUser,
+    message: 'Đăng nhập thành công',
+    data: {
+      user: tokenUser,
+      accessToken: accessTokenJWT,
+      refreshToken: refreshTokenJWT,
+    },
   })
 }
 
@@ -77,7 +83,10 @@ const logout = async (req, res) => {
     },
   )
 
-  res.status(StatusCodes.OK).json({ msg: 'Đăng xuất tài khoản thành công' })
+  res.status(StatusCodes.OK).json({
+    message: 'Đăng xuất tài khoản thành công',
+    data: {},
+  })
 }
 
 module.exports = {

@@ -1,103 +1,124 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import Input from 'src/components/Input'
-import { schemaRegister } from 'src/utils/rules'
-import type { DatePickerProps } from 'antd'
-import { DatePicker, Space, Select, Radio } from 'antd'
-import type { RadioChangeEvent } from 'antd'
+import { Schema, schema } from 'src/utils/rules'
+import { useMutation } from '@tanstack/react-query'
+import { registerAccount } from 'src/apis/auth.api'
+import { omit } from 'lodash'
+import { ErrorResponse } from 'src/types/utils.type'
+import { isAxiosBadRequestError } from 'src/utils/utils'
 
-interface FormRegister {
-  email: string
-  password: string
-  full_name: string
-  gender: string
-  confirm_password: string
-  phone: number
-  day_of_birth: Date
-  address: string
-}
+type FormRegister = Schema
 
-interface GenderRadioProps {
-  value: string
-  label: string
-  checked?: boolean 
-}
-
-const registerSchema = schemaRegister
+const registerSchema = schema
 
 export default function Register() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    // setError
+    reset,
+    setError,
   } = useForm<FormRegister>({
-    resolver: yupResolver(registerSchema)
+    resolver: yupResolver(registerSchema),
+  })
+  console.log('errors', errors)
+
+  const registerMutation = useMutation({
+    mutationFn: (body: Omit<FormRegister, 'phone' | 'confirm_password' | 'sex' | 'birth' | 'address'>) =>
+      registerAccount(body),
   })
 
-  const onSubmit: SubmitHandler<FormRegister> = (data) => console.log(data)
-
-  const GenderRadio: React.FC<GenderRadioProps> = ({ value, label, checked = false }) => {
-    const [isChecked, setIsChecked] = useState(checked)
-
-    const handleChange = (event: any) => {
-      setIsChecked(event.target.checked)
-    }
-
-    return (
-      <div className='flex flex-row gap-4'>
-        <input type='radio' name='gender' value={value} id={value} checked={isChecked} onChange={handleChange} />
-        <label htmlFor={value}>{label}</label>
-      </div>
-    )
+  const onsubmit = (data: any) => {
+    const body: any = omit(data, ['phone', 'confirm_password'])
+    registerMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log(data)
+        reset()
+      },
+      onError: (error) => {
+        if (
+          isAxiosBadRequestError<
+            ErrorResponse<Omit<FormRegister, 'phone' | 'confirm_password' | 'sex' | 'birth' | 'address'>>
+          >(error)
+        ) {
+          const formError = error.response?.data.data
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              const errorKey = key as keyof Omit<
+                FormRegister,
+                'phone' | 'confirm_password' | 'sex' | 'birth' | 'address'
+              >
+              console.log(typeof errorKey)
+              setError(errorKey, {
+                message: formError[errorKey],
+                type: 'Server',
+              })
+            })
+          }
+        }
+      },
+    })
   }
 
-  //Day of Birthday
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString)
-  }
-
-  //Select City
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`)
-  }
-
-  //Radio Select
-  const [value, setValue] = useState(1)
-
-  const onChangeRadio = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
-    setValue(e.target.value)
-  }
   return (
     <div className=' text-white text-[1.6rem] pb-20'>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form onSubmit={handleSubmit(onsubmit)} noValidate>
         <h2 className='text-[2.5rem] my-[40px] font-[600]'>Đăng Kí Tài Khoản</h2>
         <div>
           <div>Họ và tên*</div>
           <Input
             type='text'
-            name='full_name'
+            name='fullName'
             placeholder='Họ và Tên'
             register={register}
-            errorsMessage={errors.full_name?.message}
+            errorsMessage={errors.fullName?.message}
           />
         </div>
         <div>
-          <div className='flex items-center gap-20'>
+          <div className='flex items-center gap-72'>
             <div>
-              <div>Giới Tính*</div>
-              <div className='flex flex-row gap-6 mt-4 w-[348px]'>
-                <GenderRadio value='male' label='Nam' checked/>
-                <GenderRadio value='female' label='Nữ' />
-                <GenderRadio value='other' label='Khác' />
+              <div className='-translate-y-12'>Giới Tính*</div>
+              <div className='flex gap-4'>
+                <label htmlFor='field-female'>
+                  <input
+                    {...register('sex')}
+                    type='radio'
+                    name='sex'
+                    value='female'
+                    id='field-female'
+                    className='cursor-pointer p-2 '
+                  />
+                  <span> Female</span>
+                </label>
+                <label htmlFor='field-male'>
+                  <input
+                    {...register('sex')}
+                    type='radio'
+                    name='sex'
+                    value='male'
+                    id='field-male'
+                    className='cursor-pointer p-2 '
+                  />
+                  <span> Male</span>
+                </label>
+                <label htmlFor='field-other'>
+                  <input
+                    {...register('sex')}
+                    type='radio'
+                    name='sex'
+                    value='other'
+                    id='field-other'
+                    className='cursor-pointer p-2 '
+                  />
+                  <span> Other</span>
+                </label>
               </div>
             </div>
             <div>
               <div>Địa Chỉ Email*</div>
               <Input
-                type='text'
+                type='email'
                 name='email'
                 placeholder='Tài khoản hoặc địa chỉ email'
                 register={register}
@@ -134,63 +155,38 @@ export default function Register() {
           <div>Số Điện Thoại*</div>
           <Input
             type='text'
-            name='full_name'
+            name='phone'
             placeholder='Họ và Tên'
             register={register}
-            errorsMessage={errors.full_name?.message}
+            errorsMessage={errors.phone?.message}
           />
         </div>
 
         <div>
-          <div>Ngaỳ Sinh*</div>
-          <div className='mt-6'>
-            <Space direction='horizontal'>
-              <DatePicker
-                onChange={onChange}
-                picker='date'
-                style={{ width: '190px', height: '40px', color: 'white' }}
-              />
-              <DatePicker
-                onChange={onChange}
-                picker='month'
-                style={{ width: '190px', height: '40px', color: 'white', marginRight: '30px', marginLeft: '30px' }}
-              />
-              <DatePicker
-                onChange={onChange}
-                picker='year'
-                style={{ width: '190px', height: '40px', color: 'white' }}
-              />
-            </Space>
-          </div>
+          <div className='mb-5'>Ngày sinh*</div>
+          <input
+            type='date'
+            id='birth'
+            className='text-black min-w-[348px] h-[40px] rounded-md px-5 pt-2 cursor-pointer '
+            {...register('birth', { required: true })}
+          />
         </div>
 
         <div className='mt-6'>
           <div className='mb-6'>Tỉnh/Thành Phố*</div>
-          <Select
-            defaultValue='Đà Nẵng'
-            style={{ width: 420, height: 40 }}
-            onChange={handleChange}
-            options={[
-              { value: 'Đà Nẵng', label: 'Đà Nẵng' },
-              { value: 'Hồ Chí Minh', label: 'Hồ Chí Minh' },
-              { value: 'Hà Nội', label: 'Hà Nội' }
-              // { value: 'Huế', label: 'Huế', disabled: true }
-            ]}
-          />
+          <select
+            {...register('address')}
+            defaultValue={''}
+            className='w-[420px] h-[40px] px-4 rounded-md pt-2 cursor-pointer text-black'
+          >
+            <option value='Đà Nẵng'>Đà Nẵng</option>
+            <option value='Hồ Chí Minh'>Hồ Chí Minh</option>
+            <option value='Hà Nội'>Hà Nội</option>
+            <option value='Huế'>Huế</option>
+          </select>
         </div>
 
-        <div className='mt-8'>
-          <Radio.Group onChange={onChangeRadio} value={value}>
-            <Space direction='vertical'>
-              <Radio value={1} style={{ color: 'white', fontSize: '16px' }}>
-                Tôi đã đọc, hiểu và đồng ý với các điều khoản
-              </Radio>
-              <Radio value={2} style={{ color: 'white', fontSize: '16px' }}>
-                Nhận thông tin chương trình khuyến mãi
-              </Radio>
-            </Space>
-          </Radio.Group>
-        </div>
+        <div className='mt-8'></div>
         <button className='w-[750px]  h-[40px] hover:opacity-90 flex justify-center items-center font-semibold text-[1.6rem] uppercase rounded-md bg-[#FF543E] mt-[40px]'>
           Đăng Kí
         </button>

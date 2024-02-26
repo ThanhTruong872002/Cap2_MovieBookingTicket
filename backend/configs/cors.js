@@ -1,5 +1,4 @@
 module.exports = {
-    origin: [process.env.FRONTEND_URL],
-    credentials: true,
-    exposedHeaders: ['set-cookie'],
+  origin: [process.env.FRONTEND_URL, true],
+  credentials: true,
 }
