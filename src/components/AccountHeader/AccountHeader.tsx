@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom'
 import Popover from '../Popover'
+import Button from '../Button'
+import { useNavigate } from 'react-router-dom'
 
 export default function AccountHeader() {
+  const navigate = useNavigate()
   return (
     <div className='container py-6 flex items-center justify-between'>
-      <img src='./src/images/Logo.svg' alt='logo' className='w-[90px] h-[80px] cursor-pointer' />
+      <img src='./src/images/Logo.svg' alt='logo' className='w-[90px] h-[80px] cursor-pointer' onClick={() => navigate('/home')} />
       <div className='flex items-center gap-4'>
         <p className='mx-2 text-2xl text-white'>Quy Định</p>
         <p className='mx-2 text-2xl text-white'>FAQ</p>
@@ -17,7 +19,7 @@ export default function AccountHeader() {
               </div>
             </div>
           }
-          className='w-[132px] h-[40px] flex justify-center items-center gap-3 border-[1px] border-[#787878] bg-[#000120] rounded-md text-white text-[1.6rem] hover:bg-[#FF543E] cursor-pointer'
+          className='w-[132px] h-[45px] flex justify-center items-center gap-3 border-[1px] border-[#787878] bg-[#000120] rounded-md text-white text-[1.6rem] hover:bg-[#FF543E] cursor-pointer'
         >
           <span> TP. Huế</span>
           <svg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 7 5' fill='none'>
@@ -27,12 +29,9 @@ export default function AccountHeader() {
             />
           </svg>
         </Popover>
-        <Link
-          to='/account'
-          className='hover:bg-[#FF543E] px-3 min-w-[132px] h-[40px] flex justify-center items-center border-[1px] border-[#FF865F] bg-[#000120] rounded-md text-white text-[1.6rem]'
-        >
-          Đăng nhập - Đăng kí
-        </Link>
+        <Button width='135px' height='45px' to='/'>
+          Đăng nhập/ Đăng ký
+        </Button>
       </div>
     </div>
   )

@@ -76,10 +76,10 @@ export default function Register() {
           />
         </div>
         <div>
-          <div className='flex items-center gap-72'>
+          <div className='flex items-center justify-between'>
             <div>
               <div className='-translate-y-12'>Giới Tính*</div>
-              <div className='flex gap-4'>
+              <div className='flex gap-6'>
                 <label htmlFor='field-female'>
                   <input
                     {...register('sex')}
@@ -127,7 +127,7 @@ export default function Register() {
             </div>
           </div>
         </div>
-        <div className=' flex gap-20'>
+        <div className=' flex justify-between'>
           <div>
             <div>Mật Khẩu*</div>
             <Input
@@ -186,6 +186,16 @@ export default function Register() {
           </select>
         </div>
 
+        <div className='flex gap-4 mt-8'>
+          <input type='checkbox' className='p-2 cursor-pointer' />
+          <p>
+            Tôi đã đọc, hiểu và đồng ý với các <span className='text-orange underline cursor-pointer'>điều khoản</span>
+          </p>
+        </div>
+        <div className='flex gap-4 mt-3'>
+          <input type='checkbox' className='p-2 cursor-pointer' />
+          <p>Nhận thông tin chương trình khuyến mãi</p>
+        </div>
         <div className='mt-8'></div>
         <button className='w-[750px]  h-[40px] hover:opacity-90 flex justify-center items-center font-semibold text-[1.6rem] uppercase rounded-md bg-[#FF543E] mt-[40px]'>
           Đăng Kí

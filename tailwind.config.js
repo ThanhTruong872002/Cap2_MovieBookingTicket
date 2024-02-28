@@ -1,31 +1,35 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const plugin = require("tailwindcss/plugin");
+const plugin = require('tailwindcss/plugin')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   corePlugins: {
     container: false,
   },
   theme: {
     extend: {
       colors: {
-        orange: "#ee4d2d",
+        orange: '#ee4d2d',
+      },
+      maxWidth: {
+        '7xl': '150rem',
       },
     },
   },
+
   plugins: [
     plugin(function ({ addComponents, theme }) {
       addComponents({
-        ".container": {
-          maxWidth: theme("columns.8xl"),
-          marginLeft: "auto",
-          marginRight: "auto",
-          paddingLeft: theme("spacing.60"),
-          paddingRight: theme("spacing.60"),
+        '.container': {
+          maxWidth: theme('maxWidth.7xl'),
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          paddingLeft: theme(''),
+          paddingRight: theme(''),
         },
-      });
+      })
     }),
-    require("@tailwindcss/line-clamp"),
+    require('@tailwindcss/line-clamp'),
   ],
-};
+}
