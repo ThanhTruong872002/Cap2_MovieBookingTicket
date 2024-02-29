@@ -1,10 +1,26 @@
 import Popover from '../Popover'
 import Button from '../Button'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
+import { useMutation } from '@tanstack/react-query'
+import { logout } from 'src/apis/auth.api'
 
 export default function Header() {
+  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      setIsAuthenticated(false)
+    }
+  })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
   return (
     <div className='relative z-20'>
-      <div className='container p-6 flex items-center justify-between'>
+      <div className='container p-6 flex items-center justify-between px-40'>
         <div className=''>
           <img src='./src/images/Logo.svg' alt='logo' className='w-[90px] h-[80px] cursor-pointer' />
         </div>
@@ -52,46 +68,65 @@ export default function Header() {
                 />
               </svg>
             </Popover>
-            <Popover
-              renderPopover={
-                <div className='w-[320px] p-5 bg-[#1a1d29] text-[#f1f1f1]  relative shadow-sm rounded-md top-4 right-20 border border-gray-200'>
-                  <div className='flex flex-col py-2 text-[1.4rem]  '>
-                    <form>
-                      <div className='mt-6'>
-                        <div>Email*</div>
-                        <input
-                          type='email'
-                          name=''
-                          className='w-[278px] h-[36px] px-3 mt-4 font-semibold rounded-lg'
-                          placeholder='Nhập địa chỉ email tại đây'
-                        />
-                      </div>
-                      <div className='mt-6'>
-                        <div>Mật Khẩu*</div>
-                        <input
-                          type='password'
-                          name=''
-                          className='w-[278px] h-[36px] px-3 mt-4 font-semibold rounded-lg'
-                          placeholder='Nhập địa chỉ email tại đây'
-                        />
-                      </div>
-                      <div>
-                        <button className='w-full h-[40px] hover:opacity-90 flex justify-center items-center font-semibold text-[1.6rem] uppercase rounded-md bg-[#FF543E] mt-[55px]'>
-                          Đăng Nhập
-                        </button>
-                        <button className='w-full mt-10 h-[40px] hover:opacity-90 flex justify-center items-center font-semibold text-[1.6rem] uppercase rounded-md bg-[#1a1d29]  border-[1px] border-orange'>
-                          Đăng Kí Thành Viên
-                        </button>
-                      </div>
-                    </form>
+            {isAuthenticated ? (
+              <div className='flex justify-center items-center gap-4'>
+                <img
+                  src='https://scontent.fsgn2-11.fna.fbcdn.net/v/t39.30808-1/421095411_1823517634733411_4600969232899048723_n.jpg?stp=cp0_dst-jpg_p60x60&_nc_cat=105&ccb=1-7&_nc_sid=5740b7&_nc_ohc=JfjJeeyM6bYAX-yDVe1&_nc_ht=scontent.fsgn2-11.fna&oh=00_AfCOk597Hl1nsNNAs6zM7PpcmsEUjN2CJDMnw4Fy7lMCGw&oe=65E526AE'
+                  alt=''
+                  className='w-[40px] h-[40px] object-cover rounded-[50%]'
+                />
+                <p className='text-[1.8rem] font-medium text-white'>
+                  Trường Cute/{' '}
+                  <span
+                    onClick={handleLogout}
+                    className='hover:text-yellow-100 hover:opacity-90 font-semibold cursor-pointer'
+                  >
+                    Thoát
+                  </span>
+                </p>
+              </div>
+            ) : (
+              <Popover
+                renderPopover={
+                  <div className='w-[320px] p-5 bg-[#1a1d29] text-[#f1f1f1]  relative shadow-sm rounded-md top-4 right-20 border border-gray-200'>
+                    <div className='flex flex-col py-2 text-[1.4rem]  '>
+                      <form>
+                        <div className='mt-6'>
+                          <div>Email*</div>
+                          <input
+                            type='email'
+                            name=''
+                            className='w-[278px] h-[36px] px-3 mt-4 font-semibold rounded-lg'
+                            placeholder='Nhập địa chỉ email tại đây'
+                          />
+                        </div>
+                        <div className='mt-6'>
+                          <div>Mật Khẩu*</div>
+                          <input
+                            type='password'
+                            name=''
+                            className='w-[278px] h-[36px] px-3 mt-4 font-semibold rounded-lg'
+                            placeholder='Nhập địa chỉ email tại đây'
+                          />
+                        </div>
+                        <div>
+                          <button className='w-full h-[40px] hover:opacity-90 flex justify-center items-center font-semibold text-[1.6rem] uppercase rounded-md bg-[#FF543E] mt-[55px]'>
+                            Đăng Nhập
+                          </button>
+                          <button className='w-full mt-10 h-[40px] hover:opacity-90 flex justify-center items-center font-semibold text-[1.6rem] uppercase rounded-md bg-[#1a1d29]  border-[1px] border-orange'>
+                            Đăng Kí Thành Viên
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
-                </div>
-              }
-            >
-              <Button to='/' width='150px' height='45px' classnames='font-semibold'>
-                Đăng nhập/ Đăng ký
-              </Button>
-            </Popover>
+                }
+              >
+                <Button to='/account' width='150px' height='45px' classnames='font-semibold'>
+                  Đăng nhập/ Đăng ký
+                </Button>
+              </Popover>
+            )}
             <Button to='/' width='130px' height='45px' classnames='bg-orange px-4'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'

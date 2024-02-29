@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <div className="z-10 -translate-y-40">
-      <img src='./src/images/hero.png' alt='' className='h-[90%] w-[100%] object-contain ' />
+      <img src='./src/images/wibu.jpg' alt='' className='h-full w-full object-contain ' />
     </div>
   )
 }

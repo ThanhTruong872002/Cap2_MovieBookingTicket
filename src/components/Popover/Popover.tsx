@@ -24,7 +24,7 @@ export default function Popover({ children, className, renderPopover, as: Elemen
     setOpen(false)
   }
   return (
-    <Element className={className} ref={reference} onMouseEnter={showPopover} onMouseLeave={hidePopover}>
+    <Element className={className} ref={reference} onMouseEnter={showPopover} onMouseLeave={hidePopover} >
       {children}
       <FloatingPortal id={id}>
         <AnimatePresence>

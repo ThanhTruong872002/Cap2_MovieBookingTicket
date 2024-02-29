@@ -25,8 +25,8 @@ module.exports = {
           maxWidth: theme('maxWidth.7xl'),
           marginLeft: 'auto',
           marginRight: 'auto',
-          paddingLeft: theme(''),
-          paddingRight: theme(''),
+          paddingLeft: '100px',
+          paddingRight: '100px',
         },
       })
     }),

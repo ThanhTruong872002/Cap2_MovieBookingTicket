@@ -1,8 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { loginAccount } from 'src/apis/auth.api'
 import Input from 'src/components/Input'
+import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/utils.type'
 import { Schema, schema } from 'src/utils/rules'
 import { isAxiosUnauthorizedError } from 'src/utils/utils'
@@ -21,7 +24,8 @@ export default function Login() {
     resolver: yupResolver(schemaLogin),
   })
 
-  // console.log(errors)
+  const {setIsAuthenticated} = useContext(AppContext)
+  const navigate = useNavigate()
 
   const loginAccountMutation = useMutation({
     mutationFn: (body: Omit<FormLogin, 'sex' | 'confirm_password' | 'address' | 'birth' | 'fullName' | 'phone'>) =>
@@ -30,8 +34,9 @@ export default function Login() {
 
   const onsubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (error) => {
         if (

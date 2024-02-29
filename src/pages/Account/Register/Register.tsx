@@ -7,7 +7,10 @@ import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { ErrorResponse } from 'src/types/utils.type'
 import { isAxiosBadRequestError } from 'src/utils/utils'
-
+// import { useContext } from 'react'
+// import { useNavigate } from 'react-router-dom'
+// import { AppContext } from 'src/contexts/app.context'
+import Swal from 'sweetalert2'
 type FormRegister = Schema
 
 const registerSchema = schema
@@ -22,7 +25,9 @@ export default function Register() {
   } = useForm<FormRegister>({
     resolver: yupResolver(registerSchema),
   })
-  console.log('errors', errors)
+
+  // const { setIsAuthenticated } = useContext(AppContext)
+  // const navigate = useNavigate()
 
   const registerMutation = useMutation({
     mutationFn: (body: Omit<FormRegister, 'phone' | 'confirm_password' | 'sex' | 'birth' | 'address'>) =>
@@ -32,8 +37,17 @@ export default function Register() {
   const onsubmit = (data: any) => {
     const body: any = omit(data, ['phone', 'confirm_password'])
     registerMutation.mutate(body, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        // setIsAuthenticated(true)
+        // navigate('/')
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Bạn đã đăng kí thành công!',
+          text: 'Vui lòng đăng nhập',
+          showConfirmButton: false,
+          timer: 2000,
+        })
         reset()
       },
       onError: (error) => {
@@ -49,7 +63,6 @@ export default function Register() {
                 FormRegister,
                 'phone' | 'confirm_password' | 'sex' | 'birth' | 'address'
               >
-              console.log(typeof errorKey)
               setError(errorKey, {
                 message: formError[errorKey],
                 type: 'Server',

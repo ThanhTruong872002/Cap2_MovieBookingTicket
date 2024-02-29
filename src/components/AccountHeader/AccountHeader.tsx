@@ -6,7 +6,7 @@ export default function AccountHeader() {
   const navigate = useNavigate()
   return (
     <div className='container py-6 flex items-center justify-between'>
-      <img src='./src/images/Logo.svg' alt='logo' className='w-[90px] h-[80px] cursor-pointer' onClick={() => navigate('/home')} />
+      <img src='./src/images/Logo.svg' alt='logo' className='w-[90px] h-[80px] cursor-pointer' onClick={() => navigate('/')} />
       <div className='flex items-center gap-4'>
         <p className='mx-2 text-2xl text-white'>Quy Định</p>
         <p className='mx-2 text-2xl text-white'>FAQ</p>
