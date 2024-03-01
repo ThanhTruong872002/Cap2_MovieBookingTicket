@@ -42,7 +42,6 @@ export default function Popover({ children, className, renderPopover, as: Elemen
               exit={{ opacity: 0, transform: 'scale(0)' }}
               transition={{ duration: 0.3 }}
             >
-              
               {renderPopover}
             </motion.div>
           )}

@@ -7,9 +7,9 @@ import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { ErrorResponse } from 'src/types/utils.type'
 import { isAxiosBadRequestError } from 'src/utils/utils'
-// import { useContext } from 'react'
+import { useContext } from 'react'
 // import { useNavigate } from 'react-router-dom'
-// import { AppContext } from 'src/contexts/app.context'
+import { AppContext } from 'src/contexts/app.context'
 import Swal from 'sweetalert2'
 type FormRegister = Schema
 
@@ -26,7 +26,7 @@ export default function Register() {
     resolver: yupResolver(registerSchema),
   })
 
-  // const { setIsAuthenticated } = useContext(AppContext)
+  const { setProfile } = useContext(AppContext)
   // const navigate = useNavigate()
 
   const registerMutation = useMutation({
@@ -40,6 +40,7 @@ export default function Register() {
       onSuccess: () => {
         // setIsAuthenticated(true)
         // navigate('/')
+        setProfile(data.data.data.user)
         Swal.fire({
           position: 'center',
           icon: 'success',

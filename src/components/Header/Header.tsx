@@ -5,21 +5,26 @@ import { AppContext } from 'src/contexts/app.context'
 import { useMutation } from '@tanstack/react-query'
 import { logout } from 'src/apis/auth.api'
 
-export default function Header() {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+interface Props {
+  classnames?: string
+}
+
+export default function Header({ classnames } : Props) {
+  const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
 
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       setIsAuthenticated(false)
-    }
+      setProfile(null)
+    },
   })
 
   const handleLogout = () => {
     logoutMutation.mutate()
   }
   return (
-    <div className='relative z-20'>
+    <div className={`${classnames} relative z-20`}>
       <div className='container p-6 flex items-center justify-between px-40'>
         <div className=''>
           <img src='./src/images/Logo.svg' alt='logo' className='w-[90px] h-[80px] cursor-pointer' />
@@ -49,7 +54,7 @@ export default function Header() {
           <div className='flex gap-4'>
             <Popover
               renderPopover={
-                <div className='w-[260px] bg-[#2C2C2C4A] text-[#f1f1f1]  relative shadow-sm rounded-md top-4 right-20 border border-gray-200'>
+                <div className='w-[260px] bg-[#2C2C2C4A] text-[#f1f1f1]  relative shadow-sm rounded-md  right-20 border border-gray-200'>
                   <div className='flex flex-col py-2 text-[1.4rem]  '>
                     <button className='py-4 px-6 hover:bg-[#FF543E] text-left'>TP. Hồ Chí Minh</button>
                     <button className='py-4 px-6 hover:bg-[#FF543E] text-left'>TP. Đà Nẵng </button>
@@ -58,7 +63,7 @@ export default function Header() {
                   </div>
                 </div>
               }
-              className='w-[132px] h-[45px] flex justify-center items-center gap-3 border-[1px] border-[#787878] bg-[#000120] rounded-md text-white text-[1.6rem] hover:bg-[#FF543E] cursor-pointer'
+              className='w-[132px] h-[45px] bg-[#1e1c24] bg-opacity-60 flex justify-center items-center gap-3 border-[1px] border-[#787878] rounded-md text-white text-[1.6rem] hover:bg-[#FF543E] cursor-pointer'
             >
               <span> TP. Huế</span>
               <svg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 7 5' fill='none'>
@@ -75,8 +80,8 @@ export default function Header() {
                   alt=''
                   className='w-[40px] h-[40px] object-cover rounded-[50%]'
                 />
-                <p className='text-[1.8rem] font-medium text-white'>
-                  Trường Cute/{' '}
+                <p className='text-[1.8rem] font-bold text-white'>
+                  {profile?.email}
                   <span
                     onClick={handleLogout}
                     className='hover:text-yellow-100 hover:opacity-90 font-semibold cursor-pointer'
@@ -122,12 +127,17 @@ export default function Header() {
                   </div>
                 }
               >
-                <Button to='/account' width='150px' height='45px' classnames='font-semibold'>
+                <Button
+                  to='/account'
+                  width='150px'
+                  height='45px'
+                  classnames='font-semibold bg-[#1e1c24] bg-opacity-60 '
+                >
                   Đăng nhập/ Đăng ký
                 </Button>
               </Popover>
             )}
-            <Button to='/' width='130px' height='45px' classnames='bg-orange px-4'>
+            <Button to='/' width='130px' height='45px' classnames='bg-orange px-4 '>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='white'

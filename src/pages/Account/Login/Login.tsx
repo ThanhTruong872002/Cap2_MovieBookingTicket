@@ -24,7 +24,7 @@ export default function Login() {
     resolver: yupResolver(schemaLogin),
   })
 
-  const {setIsAuthenticated} = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
 
   const loginAccountMutation = useMutation({
@@ -34,8 +34,9 @@ export default function Login() {
 
   const onsubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         navigate('/')
       },
       onError: (error) => {

@@ -2,7 +2,7 @@ import axios, { AxiosError, type AxiosInstance } from 'axios'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { toast } from 'react-toastify'
 import { AuthResponse } from 'src/types/auth.type'
-import { clearAccessTokenFromLS, getAccessTokenFromLS, saveAccesTokenToLS } from './auth'
+import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from './auth'
 
 class Http {
   instance: AxiosInstance
@@ -17,25 +17,30 @@ class Http {
       },
     })
 
-    this.instance.interceptors.request.use((config) => {
-      if(this.accessToken && config.headers) {
-        config.headers.authorization = `Bearer ${this.accessToken}`
+    this.instance.interceptors.request.use(
+      (config) => {
+        if (this.accessToken && config.headers) {
+          config.headers.authorization = `Bearer ${this.accessToken}`
+          return config
+        }
         return config
-      }
-      return config
-    }, (error) => {
-      return Promise.reject(error)
-    })
+      },
+      (error) => {
+        return Promise.reject(error)
+      },
+    )
     //nó như một bức tường lửa cho phép bạn kiểm tra, thêm vào hoặc thay đổi các header, param hoặc data của request và response.
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
         if (url === '/auth/login' || url === '/auth/register') {
+          const data = response.data as AuthResponse
           this.accessToken = (response.data as AuthResponse).data.accessToken
-          saveAccesTokenToLS(this.accessToken)
-        } else if(url === '/auth/logout') {
+          setAccessTokenToLS(this.accessToken)
+          setProfileToLS(data.data.user)
+        } else if (url === '/auth/logout') {
           this.accessToken = ''
-          clearAccessTokenFromLS()
+          clearLS()
         }
         return response
       },
