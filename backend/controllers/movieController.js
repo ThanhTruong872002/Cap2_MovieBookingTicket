@@ -1,20 +1,9 @@
 const { DetailMovie } = require('../models')
 const moment = require('moment')
 const { StatusCodes } = require('http-status-codes')
+const mongoose = require('mongoose')
 
-const getAll = async (req, res) => {
-    try {
-        const allMovies = await DetailMovie.find();
-
-        res.status(StatusCodes.OK).json({
-            message: 'Tất cả',
-            data: { allMovies },
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
-    }
-}
+// merge
 
 const getMovieShowing = async (req, res) => {
     try {
@@ -22,7 +11,15 @@ const getMovieShowing = async (req, res) => {
         const moviesNowPlaying = await DetailMovie.find({
             ticketOnSale: true,
             startDate: { $lte: today },
-            endDate: { $gte: today },
+            endDate: { $gte: today }
+        }, {
+            _id: 1,
+            movieName: 1,
+            image: 1,
+            ageLimit: 1,
+            language: 1,
+            format: 1,
+            cats: 1,
         });
 
         res.status(StatusCodes.OK).json({
@@ -41,6 +38,14 @@ const getUpcomingMovie = async (req, res) => {
         const moviesUpcoming = await DetailMovie.find({
             ticketOnSale: false,
             startDate: { $gte: today },
+        }, {
+            _id: 1,
+            movieName: 1,
+            image: 1,
+            ageLimit: 1,
+            language: 1,
+            format: 1,
+            cats: 1,
         });
 
         res.status(StatusCodes.OK).json({
@@ -59,6 +64,14 @@ const getPreSaleTicket = async (req, res) => {
         const moviesPreSaleTicket = await DetailMovie.find({
             ticketOnSale: true,
             startDate: { $gte: today },
+        }, {
+            _id: 1,
+            movieName: 1,
+            image: 1,
+            ageLimit: 1,
+            language: 1,
+            format: 1,
+            cats: 1,
         });
 
         res.status(StatusCodes.OK).json({
@@ -73,16 +86,27 @@ const getPreSaleTicket = async (req, res) => {
 
 const getDetailMovie = async (req, res) => {
     try {
-        const movieName = req.params.movieName || req.query.movieName;
+        const movieId = req.params.id;
 
-        if (!movieName) {
+        if (!movieId || !mongoose.Types.ObjectId.isValid(movieId)) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-                error: 'Tên phim không được trống',
+                error: 'ID phim không hợp lệ',
             });
         }
 
-        const movieDetail = await DetailMovie.findOne({
-            movieName: movieName,
+        const movieDetail = await DetailMovie.findById(movieId, {
+            _id: 1,
+            movieName: 1,
+            image: 1,
+            ageLimit: 1,
+            language: 1,
+            format: 1,
+            cats: 1,
+            description: 1,
+            actors: 1,
+            directors: 1,
+            startDate: 1,
+            duration: 1
         });
 
         if (!movieDetail) {
@@ -105,6 +129,5 @@ module.exports = {
     getMovieShowing,
     getUpcomingMovie,
     getPreSaleTicket,
-    getDetailMovie,
-    getAll
+    getDetailMovie
 }
