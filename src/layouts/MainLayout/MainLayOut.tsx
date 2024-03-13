@@ -7,7 +7,7 @@ interface Props {
 
 export default function MainLayOut({ children }: Props) {
   return (
-    <div>
+    <div className='bg-[#1A1D29]'>
       <Header />
       {children}
       <Footer />

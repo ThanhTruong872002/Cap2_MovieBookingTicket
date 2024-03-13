@@ -3,8 +3,6 @@ const moment = require('moment')
 const { StatusCodes } = require('http-status-codes')
 const mongoose = require('mongoose')
 
-// merge
-
 const getMovieShowing = async (req, res) => {
     try {
         const today = moment().startOf('day');
