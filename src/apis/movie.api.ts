@@ -1,4 +1,6 @@
-import { MovieResponse } from 'src/types/movie.type'
+import { MovieUpCommingResponse } from 'src/types/movieUpcoming.type'
+import { MovieShowingResponse } from 'src/types/movieShowing.type'
 import http from 'src/utils/http'
 
-export const moviesShowing = () => http.get<MovieResponse>('/movie/showing')
+export const moviesShowing = () => http.get<MovieShowingResponse>('/movie/showing')
+export const moviesUpComming = () => http.get<MovieUpCommingResponse>('/movie/upcoming')

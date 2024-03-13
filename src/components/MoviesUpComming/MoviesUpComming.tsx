@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react'
-import MovieItem from '../MovieItem'
-import { moviesShowing } from 'src/apis/movie.api'
 import Slider from 'react-slick'
-import '../../CSS/CustomReactSlick.css'
+import { moviesUpComming } from 'src/apis/movie.api'
+import MovieItem from '../MovieItem'
 
-export default function MoviesShowing() {
+export default function MoviesUpComming() {
   const [movieData, setMovieData] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await moviesShowing()
-        const data = response.data.data.moviesNowPlaying
+        const response = await moviesUpComming()
+        const data = response.data.data.moviesUpcoming
         setMovieData(data)
       } catch (error) {
         console.error('Error fetch data in :', error)
@@ -34,7 +33,7 @@ export default function MoviesShowing() {
   return (
     <>
       <div className='flex flex-col px-64 py-12 my-10'>
-        <h1 className='text-white font-semibold text-3xl text-center pb-12'>Phim Đang Chiếu</h1>
+        <h1 className='text-white font-semibold text-3xl text-center pb-12'>Phim Sắp Chiếu</h1>
         {movieData.length > 5 && (
           <Slider {...settings} className='.slick-dots'>
             {movieData.map((movie, index) => (
@@ -43,10 +42,10 @@ export default function MoviesShowing() {
                 id={movie._id}
                 img_url={movie.image}
                 movieName={movie.movieName}
-                ageLimit={movie.ageLimit}
                 cats={movie.cats.join(', ')}
-                format={movie.format}
-                language={movie.language.join(', ')}
+                ageLimit=''
+                format=''
+                language=''
               />
             ))}
           </Slider>

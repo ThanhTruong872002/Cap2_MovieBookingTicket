@@ -40,9 +40,6 @@ const getUpcomingMovie = async (req, res) => {
             _id: 1,
             movieName: 1,
             image: 1,
-            ageLimit: 1,
-            language: 1,
-            format: 1,
             cats: 1,
         });
 

@@ -1,6 +1,6 @@
 import { SuccessResponse } from './utils.type'
 
-export type MovieResponse = SuccessResponse<{
+export type MovieShowingResponse = SuccessResponse<{
   moviesNowPlaying: any
   _id: string
   image: string
