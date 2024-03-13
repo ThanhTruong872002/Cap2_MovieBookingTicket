@@ -25,8 +25,8 @@ export default function MoviesUpComming() {
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
-    nextArrow: <button className='slick-next'></button>,
-    prevArrow: <button className='slick-prev'></button>,
+    nextArrow: movieData.length > 5 ? <button className='slick-next'></button> : <></>,
+    prevArrow: movieData.length > 5 ? <button className='slick-prev'></button> : <></>,
     dots: true,
   }
 
@@ -34,22 +34,20 @@ export default function MoviesUpComming() {
     <>
       <div className='flex flex-col px-64 py-12 my-10'>
         <h1 className='text-white font-semibold text-3xl text-center pb-12'>Phim Sắp Chiếu</h1>
-        {movieData.length > 5 && (
-          <Slider {...settings} className='.slick-dots'>
-            {movieData.map((movie, index) => (
-              <MovieItem
-                key={index}
-                id={movie._id}
-                img_url={movie.image}
-                movieName={movie.movieName}
-                cats={movie.cats.join(', ')}
-                ageLimit=''
-                format=''
-                language=''
-              />
-            ))}
-          </Slider>
-        )}
+        <Slider {...settings} className='.slick-dots'>
+          {movieData.map((movie, index) => (
+            <MovieItem
+              key={index}
+              id={movie._id}
+              img_url={movie.image}
+              movieName={movie.movieName}
+              cats={movie.cats.join(', ')}
+              ageLimit=''
+              format=''
+              language=''
+            />
+          ))}
+        </Slider>
       </div>
       <div className='h-1 w-full bg-white mt-40' />
     </>
