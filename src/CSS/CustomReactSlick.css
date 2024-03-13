@@ -1,0 +1,40 @@
+.slick-dots {
+    display: flex;
+    justify-content: center;
+    margin: -24px 4px;
+
+    button {
+        width: 8px !important;
+        height: 8px !important;
+        display: block;
+        border-radius: 100%;
+        background-color: #ccc !important;
+        text-indent: -9999px;
+    }
+
+    li.slick-active button {
+        background-color: #ff511f !important;
+    }
+}
+
+.slick-prev::before,
+.slick-next::before {
+    font-size: 48px;
+    color: #FF551F;
+    border: none;
+    outline: none;
+    z-index: 1;
+}
+
+.slick-prev {
+    left: -60px;
+}
+
+.slick-next {
+    right: -60px;
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+    cursor: pointer;
+}

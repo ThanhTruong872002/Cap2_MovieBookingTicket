@@ -1,10 +1,11 @@
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Slider from 'react-slick'
+import MoviesShowing from 'src/components/MoviesShowing'
 
 export default function Home() {
   var settings = {
-    dots: true,
+    // dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -23,6 +24,7 @@ export default function Home() {
           <img src='./src/images/hero1.jpg' alt='' className='h-[80%] w-full object-contain ' />
         </div>
       </Slider>
+      <MoviesShowing />
     </div>
   )
 }
