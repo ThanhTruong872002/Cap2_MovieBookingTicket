@@ -2,6 +2,8 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Slider from 'react-slick'
 import MoviesShowing from 'src/components/MoviesShowing'
+import MoviesUpComming from 'src/components/MoviesUpComming'
+import PreSaleticket from 'src/components/PreSaleTicket'
 
 export default function Home() {
   var settings = {
@@ -25,6 +27,8 @@ export default function Home() {
         </div>
       </Slider>
       <MoviesShowing />
+      <PreSaleticket />
+      <MoviesUpComming />
     </div>
   )
 }

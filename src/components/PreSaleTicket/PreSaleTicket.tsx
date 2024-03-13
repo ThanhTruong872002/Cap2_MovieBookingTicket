@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react'
 import MovieItem from '../MovieItem'
-import { moviesShowing } from 'src/apis/movie.api'
+import { preSaleTicket } from 'src/apis/movie.api'
 import Slider from 'react-slick'
 import '../../CSS/CustomReactSlick.css'
 
-export default function MoviesShowing() {
+export default function PreSaleticket() {
   const [movieData, setMovieData] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await moviesShowing()
-        const data = response.data.data.moviesNowPlaying
+        const response = await preSaleTicket()
+        const data = response.data.data.moviesPreSaleTicket
         setMovieData(data)
+        console.log(response.data.data)
       } catch (error) {
         console.error('Error fetch data in :', error)
       }
@@ -34,7 +35,7 @@ export default function MoviesShowing() {
   return (
     <>
       <div className='flex flex-col px-64 py-12 my-10'>
-        <h1 className='text-white font-semibold text-3xl text-center pb-12'>Phim Đang Chiếu</h1>
+        <h1 className='text-white font-semibold text-3xl text-center pb-12'>Vé Bán Trước</h1>
         {movieData.length > 5 && (
           <Slider {...settings} className='.slick-dots'>
             {movieData.map((movie, index) => (
