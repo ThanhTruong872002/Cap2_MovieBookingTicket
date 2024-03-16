@@ -4,12 +4,13 @@ import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import { useMutation } from '@tanstack/react-query'
 import { logout } from 'src/apis/auth.api'
+import { Link } from 'react-router-dom'
 
 interface Props {
   classnames?: string
 }
 
-export default function Header({ classnames } : Props) {
+export default function Header({ classnames }: Props) {
   const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
 
   const logoutMutation = useMutation({
@@ -80,15 +81,17 @@ export default function Header({ classnames } : Props) {
                   alt=''
                   className='w-[40px] h-[40px] object-cover rounded-[50%]'
                 />
-                <p className='text-[1.8rem] font-bold text-white'>
-                  {profile?.email}
-                  <span
-                    onClick={handleLogout}
-                    className='hover:text-yellow-100 hover:opacity-90 font-semibold cursor-pointer'
-                  >
-                    Thoát
-                  </span>
-                </p>
+                <Link to={'/profile'}>
+                  <p className='text-[1.8rem] font-bold text-white'>
+                    {profile?.email}
+                    <span
+                      onClick={handleLogout}
+                      className='hover:text-yellow-100 hover:opacity-90 font-semibold cursor-pointer'
+                    >
+                      Thoát
+                    </span>
+                  </p>
+                </Link>
               </div>
             ) : (
               <Popover

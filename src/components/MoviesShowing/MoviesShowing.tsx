@@ -28,7 +28,6 @@ export default function MoviesShowing() {
     slidesToScroll: 1,
     nextArrow: movieData.length > 5 ? <button className='slick-next'></button> : <></>,
     prevArrow: movieData.length > 5 ? <button className='slick-prev'></button> : <></>,
-    dots: true,
   }
 
   return (
