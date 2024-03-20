@@ -74,6 +74,7 @@ export default function Login() {
             name='email'
             placeholder='Tài khoản hoặc địa chỉ email'
             register={register}
+            className='w-[350px]'
             errorsMessage={errors.email?.message}
           />
         </div>
@@ -84,6 +85,7 @@ export default function Login() {
             name='password'
             placeholder='Mật Khẩu'
             register={register}
+            className='w-[350px]'
             errorsMessage={errors.password?.message}
           />
         </div>

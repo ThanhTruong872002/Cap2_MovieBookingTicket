@@ -8,7 +8,7 @@ import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { ErrorResponse } from 'src/types/utils.type'
 import { isAxiosBadRequestError } from 'src/utils/utils'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Swal from 'sweetalert2'
 type FormRegister = Schema
@@ -28,10 +28,24 @@ export default function ProfileUpdate() {
 
   const { setProfile } = useContext(AppContext)
 
+  const [changePassClick, setChangePassClick] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+
   const registerMutation = useMutation({
     mutationFn: (body: Omit<FormRegister, 'phone' | 'confirm_password' | 'sex' | 'birth' | 'address'>) =>
       registerAccount(body),
   })
+
+  const handleChangePassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setChangePassClick(!changePassClick)
+    setShowPassword(false)
+    console.log(changePassClick)
+  }
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword)
+  }
 
   const onsubmit = (data: any) => {
     const body: any = omit(data, ['phone', 'confirm_password'])
@@ -73,7 +87,7 @@ export default function ProfileUpdate() {
   }
 
   return (
-    <div className='flex flex-col border-solid border-2 border-gray-400 rounded-lg'>
+    <div className='flex flex-col border-solid border-2 border-gray-400 rounded-lg min-w-[820px]'>
       <div className='flex flex-col p-16 pb-0 gap-12'>
         <div className='flex gap-8'>
           <img src={hero} alt='' className='w-[150px] h-[150px]' />
@@ -104,55 +118,16 @@ export default function ProfileUpdate() {
           />
         </div>
         <div>
-          <div className='flex items-center justify-between gap-16'>
-            <div>
-              <div className='-translate-y-12'>Giới Tính*</div>
-              <div className='flex gap-6'>
-                <label htmlFor='field-female'>
-                  <input
-                    {...register('sex')}
-                    type='radio'
-                    name='sex'
-                    value='female'
-                    id='field-female'
-                    className='cursor-pointer p-2 '
-                  />
-                  <span> Female</span>
-                </label>
-                <label htmlFor='field-male'>
-                  <input
-                    {...register('sex')}
-                    type='radio'
-                    name='sex'
-                    value='male'
-                    id='field-male'
-                    className='cursor-pointer p-2 '
-                  />
-                  <span> Male</span>
-                </label>
-                <label htmlFor='field-other'>
-                  <input
-                    {...register('sex')}
-                    type='radio'
-                    name='sex'
-                    value='other'
-                    id='field-other'
-                    className='cursor-pointer p-2 '
-                  />
-                  <span> Other</span>
-                </label>
-              </div>
-            </div>
-            <div>
-              <div>Địa Chỉ Email*</div>
-              <Input
-                type='email'
-                name='email'
-                placeholder='Tài khoản hoặc địa chỉ email'
-                register={register}
-                errorsMessage={errors.email?.message}
-              />
-            </div>
+          <div>
+            <div>Địa Chỉ Email*</div>
+            <Input
+              type='email'
+              name='email'
+              readOnly={true}
+              placeholder='Tài khoản hoặc địa chỉ email'
+              register={register}
+              errorsMessage={errors.email?.message}
+            />
           </div>
         </div>
         <div className='flex justify-between items-center gap-16'>
@@ -162,14 +137,52 @@ export default function ProfileUpdate() {
               type='password'
               name='password'
               placeholder='Mật Khẩu'
+              readOnly={true}
+              className='w-[420px]'
               register={register}
               errorsMessage={errors.password?.message}
             />
           </div>
-          <button className='w-full h-[40px] hover:opacity-90 font-semibold text-[1.6rem] rounded-md bg-[#FF543E]'>
+          <button
+            onClick={handleChangePassword}
+            className='w-[260px] h-[40px] hover:opacity-90 font-semibold text-[1.6rem] rounded-md bg-[#FF543E]'
+          >
             Đổi mật khẩu
           </button>
         </div>
+
+        {changePassClick ? (
+          <div>
+            <div className='flex justify-between items-center gap-16'>
+              <div>
+                <div>Mật Khẩu Mới*</div>
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  name='password'
+                  placeholder='Mật Khẩu Mới'
+                  register={register}
+                  errorsMessage={errors.password?.message}
+                />
+              </div>
+              <div>
+                <div>Nhập Lại Mật Khẩu*</div>
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  name='password'
+                  placeholder='Nhập Lại Mật Khẩu'
+                  register={register}
+                  errorsMessage={errors.password?.message}
+                />
+              </div>
+            </div>
+            <div className='flex mb-10 gap-5'>
+              <input type='checkbox' onChange={handleTogglePassword} />
+              Hiện mật khẩu
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
 
         <div>
           <div>Số Điện Thoại*</div>
@@ -177,6 +190,7 @@ export default function ProfileUpdate() {
             type='text'
             name='phone'
             placeholder='Họ và Tên'
+            readOnly={true}
             register={register}
             errorsMessage={errors.phone?.message}
           />

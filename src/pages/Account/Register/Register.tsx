@@ -84,6 +84,7 @@ export default function Register() {
           <Input
             type='text'
             name='fullName'
+            className='w-[350px]'
             placeholder='Họ và Tên'
             register={register}
             errorsMessage={errors.fullName?.message}
@@ -170,6 +171,7 @@ export default function Register() {
           <Input
             type='text'
             name='phone'
+            className='w-[350px]'
             placeholder='Họ và Tên'
             register={register}
             errorsMessage={errors.phone?.message}

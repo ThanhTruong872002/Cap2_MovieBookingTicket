@@ -1,62 +1,108 @@
-import { UserOutlined } from '@ant-design/icons'
-import type { MenuProps } from 'antd'
-import { Dropdown, message } from 'antd'
+import { Select, DatePicker } from 'antd'
+import dayjs, { Dayjs } from 'dayjs'
+import '../../index.css'
+import { RangePickerProps } from 'antd/es/date-picker/generatePicker'
+import { Table } from 'antd'
+import type { TableProps } from 'antd'
+
+interface DataType {
+  time: string
+  mode: string
+  info: string
+  amount: string
+  score: string
+}
 
 export default function TransitionHistory() {
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    message.info('Click on left button.')
-    console.log('click left button', e)
+  const items = ['Đặt vé', 'Điểm RP']
+  const handleChange = (value: string) => {
+    console.log(value)
   }
 
-  const handleMenuClick: MenuProps['onClick'] = (e) => {
-    message.info('Click on menu item.')
-    console.log('click', e)
+  const handleChangeMonth = (value: dayjs.Dayjs | null) => {
+    if (value) {
+      console.log(value.format('MM/YYYY'))
+    }
   }
 
-  const items: MenuProps['items'] = [
+  const disabledDate: RangePickerProps<Dayjs>['disabledDate'] = (current) => {
+    return current && current > dayjs().endOf('day')
+  }
+
+  const columns: TableProps<DataType>['columns'] = [
     {
-      label: '1st menu item',
-      key: '1',
-      icon: <UserOutlined />,
+      title: 'STT',
+      dataIndex: 'stt',
+      render: (text, record, index) => index + 1,
     },
     {
-      label: '2nd menu item',
-      key: '2',
-      icon: <UserOutlined />,
+      title: 'Time',
+      dataIndex: 'time',
+      key: 'time',
     },
     {
-      label: '3rd menu item',
-      key: '3',
-      icon: <UserOutlined />,
-      danger: true,
+      title: 'Mode',
+      dataIndex: 'mode',
+      key: 'mode',
     },
     {
-      label: '4rd menu item',
-      key: '4',
-      icon: <UserOutlined />,
-      danger: true,
-      disabled: true,
+      title: 'Info',
+      dataIndex: 'info',
+      key: 'info',
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+    },
+    {
+      title: 'Score',
+      dataIndex: 'score',
+      key: 'score',
     },
   ]
 
-  const menuProps = {
-    items,
-    onClick: handleMenuClick,
+  const data = []
+
+  for (let i = 0; i < 15; i++) {
+    data.push({
+      time: `Time ${i + 1}`,
+      mode: `Mode ${i + 1}`,
+      info: `Info ${i + 1}`,
+      amount: `Amount ${i + 1}`,
+      score: `Score ${i + 1}`,
+    })
   }
+
   return (
-    <div className='w-full'>
+    <div className='w-[75%] flex flex-col gap-20'>
       <div className='flex justify-between'>
         <h1 className='text-white text-[32px] font-semibold uppercase'>lịch sử giao dịch</h1>
         <div className='flex gap-10'>
-          <Dropdown.Button menu={menuProps} onClick={handleButtonClick}>
-            Đặt vé
-          </Dropdown.Button>
+          <Select
+            style={{ width: '200px' }}
+            dropdownStyle={{ background: 'transparent' }}
+            defaultValue={items[0]}
+            onChange={handleChange}
+          >
+            {items.map((item, index) => (
+              <Select.Option key={index} value={item}>
+                {item}
+              </Select.Option>
+            ))}
+          </Select>
 
-          <Dropdown.Button menu={menuProps} onClick={handleButtonClick}>
-            Đặt vé
-          </Dropdown.Button>
+          <DatePicker
+            allowClear={false}
+            style={{ width: '200px' }}
+            disabledDate={disabledDate}
+            defaultValue={dayjs()}
+            onChange={handleChangeMonth}
+            picker='month'
+          />
         </div>
       </div>
+      <Table columns={columns} dataSource={data} bordered footer={() => 'Tổng cộng'} />
     </div>
   )
 }
