@@ -1,10 +1,9 @@
-import hero from '../../images/hero.png'
-import Input from 'src/components/Input'
 import { useContext, useState } from 'react'
 import { AppContext } from 'src/contexts/app.context'
+import '../../index.css'
 
 export default function ProfileUpdate() {
-  const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
+  const { isAuthenticated, profile } = useContext(AppContext)
   const [changePassClick, setChangePassClick] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
@@ -44,46 +43,44 @@ export default function ProfileUpdate() {
         </div>
         <div className='border-dashed border' />
       </div>
-      {/* <form noValidate className='p-16'>
-        <div>
+      <form noValidate className='p-16'>
+        <div className='mb-8'>
           <div>Họ và tên*</div>
-          <Input
+          <input
+            className='px-[12px] w-full mt-4 text-2xl text-white bg-transparent border-[1px] border-[#454D6A] min-w-[348px] h-[40px] rounded-md'
             type='text'
             name='fullName'
             placeholder='Họ và Tên'
-            register={register}
-            errorsMessage={errors.fullName?.message}
+            value={profile?.fullName}
           />
         </div>
-        <div>
+        <div className='mb-8'>
           <div>
             <div>Địa Chỉ Email*</div>
-            <Input
+            <input
+              className='px-[12px] mt-4 w-full text-2xl text-white bg-slate-600 cursor-not-allowed min-w-[348px] h-[40px] rounded-md'
               type='email'
               name='email'
-              readOnly={true}
-              placeholder='Tài khoản hoặc địa chỉ email'
-              register={register}
-              errorsMessage={errors.email?.message}
+              placeholder='Địa chỉ email'
+              value={!profile?.email ? 'null' : profile.email}
+              disabled
             />
           </div>
         </div>
-        <div className='flex justify-between items-center gap-16'>
+        <div className='flex justify-between items-center gap-16 mb-8'>
           <div>
             <div>Mật Khẩu*</div>
-            <Input
+            <input
+              className='px-[12px] mt-4 w-[420px] text-2xl text-white  bg-gray-600 cursor-not-allowed min-w-[348px] h-[40px] rounded-md'
               type='password'
-              name='password'
               placeholder='Mật Khẩu'
-              readOnly={true}
-              className='w-[420px]'
-              register={register}
-              errorsMessage={errors.password?.message}
+              name='password'
+              disabled
             />
           </div>
           <button
             onClick={handleChangePassword}
-            className='w-[260px] h-[40px] hover:opacity-90 font-semibold text-[1.6rem] rounded-md bg-[#FF543E]'
+            className='w-[260px] h-[40px] hover:opacity-90 font-semibold text-[1.6rem] rounded-md bg-[#FF543E] mt-10'
           >
             Đổi mật khẩu
           </button>
@@ -91,29 +88,28 @@ export default function ProfileUpdate() {
 
         {changePassClick ? (
           <div>
-            <div className='flex justify-between items-center gap-16'>
+            <div className='flex justify-between items-center gap-16 mt-10'>
               <div>
                 <div>Mật Khẩu Mới*</div>
-                <Input
+
+                <input
+                  className='px-[12px] mt-4 text-2xl text-white bg-transparent border-[1px] border-[#454D6A] min-w-[348px] h-[40px] rounded-md'
                   type={showPassword ? 'text' : 'password'}
-                  name='password'
+                  name='newPassword'
                   placeholder='Mật Khẩu Mới'
-                  register={register}
-                  errorsMessage={errors.password?.message}
                 />
               </div>
               <div>
                 <div>Nhập Lại Mật Khẩu*</div>
-                <Input
+                <input
+                  className='px-[12px] mt-4 text-2xl text-white bg-transparent border-[1px] border-[#454D6A] min-w-[348px] h-[40px] rounded-md'
                   type={showPassword ? 'text' : 'password'}
-                  name='password'
+                  name='confirmPassword'
                   placeholder='Nhập Lại Mật Khẩu'
-                  register={register}
-                  errorsMessage={errors.password?.message}
                 />
               </div>
             </div>
-            <div className='flex mb-10 gap-5'>
+            <div className='flex mb-10 gap-5 mt-4'>
               <input type='checkbox' onChange={handleTogglePassword} />
               Hiện mật khẩu
             </div>
@@ -122,46 +118,44 @@ export default function ProfileUpdate() {
           <></>
         )}
 
-        <div>
+        <div className='mb-8'>
           <div>Số Điện Thoại*</div>
-          <Input
+          <input
+            className='px-[12px] mt-4 w-full text-2xl text-white bg-gray-600 cursor-not-allowed min-w-[348px] h-[40px] rounded-md outline-none'
             type='text'
             name='phone'
-            placeholder='Họ và Tên'
-            readOnly={true}
-            register={register}
-            errorsMessage={errors.phone?.message}
+            placeholder='Số điện thoại'
+            disabled
+            value={!profile?.phone ? 'null' : 'hehe'}
           />
         </div>
 
-        <div>
+        <div className='mb-8'>
           <div className='mb-5'>Ngày sinh*</div>
           <input
             type='date'
             id='birth'
-            className='text-black min-w-[348px] h-[40px] rounded-md px-5 pt-2 cursor-pointer '
-            {...register('birth', { required: true })}
+            value={!profile?.birthday ? Date.now() : profile.birthday}
+            className='text-white bg-transparent border-[1px] border-[#454D6A] min-w-[348px] h-[40px] rounded-md px-5 pt-2 cursor-pointer '
           />
         </div>
 
         <div className='mt-6'>
           <div className='mb-6'>Tỉnh/Thành Phố*</div>
-          <select
-            {...register('address')}
-            defaultValue={''}
-            className='w-[420px] h-[40px] px-4 rounded-md pt-2 cursor-pointer text-black'
-          >
-            <option value='Đà Nẵng'>Đà Nẵng</option>
-            <option value='Hồ Chí Minh'>Hồ Chí Minh</option>
-            <option value='Hà Nội'>Hà Nội</option>
-            <option value='Huế'>Huế</option>
-          </select>
+          <div className='select'>
+            <select defaultValue={profile?.city} className='select border-[1px] border-[#454D6A] outline-none'>
+              <option value='Đà Nẵng'>Đà Nẵng</option>
+              <option value='Hồ Chí Minh'>Hồ Chí Minh</option>
+              <option value='Hà Nội'>Hà Nội</option>
+              <option value='Huế'>Huế</option>
+            </select>
+          </div>
         </div>
 
         <button className='w-full h-[40px] hover:opacity-90 flex justify-center items-center font-semibold text-[1.6rem] uppercase rounded-md bg-[#FF543E] mt-[40px]'>
           cập nhật
         </button>
-      </form> */}
+      </form>
     </div>
   )
 }

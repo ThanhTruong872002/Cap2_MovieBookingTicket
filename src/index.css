@@ -19,6 +19,51 @@ body {
   font-family: 'Be Vietnam Pro', sans-serif;
 }
 
+select {
+  appearance: none;
+  box-shadow: none;
+  outline-color: #fff;
+  flex: 1;
+  padding: 0 1em;
+  color: #fff;
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+
+  option {
+    color: black;
+  }
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+.select {
+  position: relative;
+  display: flex;
+  width: 70%;
+  height: 3em;
+  border-radius: .25em;
+  overflow: hidden;
+}
+
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1em;
+  background-color: #34495e;
+  transition: .25s all ease;
+  pointer-events: none;
+}
+
+/* Transition */
+.select:hover::after {
+  color: #f39c12;
+}
+
 :where(.css-dev-only-do-not-override-1qhpsh8).ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector,
 :where(.css-dev-only-do-not-override-1qhpsh8).ant-picker-outlined {
   background: transparent;

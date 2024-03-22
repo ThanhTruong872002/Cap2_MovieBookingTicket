@@ -8,7 +8,7 @@ const MovieItem = ({ id, img_url, movieName, cats, ageLimit, language, format }:
 
   return (
     <div className='text-white flex flex-col gap-12 cursor-grab'>
-      <Link to={`/moviedetail/${id}`}>
+      <Link to={`/movie/detail/${id}`}>
         <img
           src={img_url}
           alt={movieName}
@@ -17,7 +17,7 @@ const MovieItem = ({ id, img_url, movieName, cats, ageLimit, language, format }:
       </Link>
 
       <div className='pl-12 flex flex-col gap-6'>
-        <Link to={`/moviedetail/${id}`}>
+        <Link to={`/movie/detail/${id}`}>
           <p className='font-bold text-2xl cursor-pointer hover:text-red-400'>{truncatedMovieName}</p>
         </Link>
         <div className='flex flex-col gap-5'>
@@ -41,7 +41,7 @@ const MovieItem = ({ id, img_url, movieName, cats, ageLimit, language, format }:
         </div>
         {cats && format && language ? (
           <div className='flex gap-6 cursor-pointer items-center'>
-            <Button to='/' width='130px' height='40px' classnames='bg-orange px-4 '>
+            <Button to={`/movie/detail/${id}`} width='130px' height='40px' classnames='bg-orange px-4 '>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='white'
@@ -58,7 +58,7 @@ const MovieItem = ({ id, img_url, movieName, cats, ageLimit, language, format }:
               </svg>
               <span className='font-semibold'>Mua vé ngay</span>
             </Button>
-            <Link to={`/moviedetail/${id}`}>
+            <Link to={`/movie/detail/${id}`}>
               <p className='text-2xl border w-12 h-12 flex items-center justify-center rounded-full font-semibold hover:bg-white hover:text-red-400'>
                 i
               </p>
@@ -66,7 +66,7 @@ const MovieItem = ({ id, img_url, movieName, cats, ageLimit, language, format }:
           </div>
         ) : (
           <div className='cursor-pointer items-center justify-center w-[70%]'>
-            <Button to={`/moviedetail/${id}`} width='130px' height='40px' classnames='flex gap-5 px-4 '>
+            <Button to={`/movie/detail/${id}`} width='130px' height='40px' classnames='flex gap-5 px-4 '>
               <p className='text-2xl border w-12 h-12 flex items-center justify-center rounded-full font-semibold hover:bg-white hover:text-red-400'>
                 i
               </p>
